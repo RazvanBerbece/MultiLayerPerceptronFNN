@@ -28,19 +28,18 @@ from functions.mse import MSE
 class FeedforwardNeuralNet:
 
     # Network Hyperparameters Initialiser 
-    def __init__(self, input_size, hidden_size, output_size, bias, learning_rate):
+    def __init__(self, input_size, hidden_size, output_size, bias):
         self.input_size  = input_size  # nodes in the input layer
         self.hidden_size = hidden_size  # nodes in the hidden layer
         self.output_size = output_size  # nodes in the output layer
 
         self.bias = bias
-        self.learning_rate = learning_rate
     
     def init_input(self, input_array):
         self.x = input_array
     
     def init_output(self, output_array):
-        output_array = output_array.reshape(self.x.shape[0], 1) # make sure that the results are in the right shape
+        output_array = output_array.T # make sure that the results are in the right shape using the transpose
         self.y = output_array
 
     def init_weights(self):
@@ -57,7 +56,7 @@ class FeedforwardNeuralNet:
         """
         Does matrix multiplication as per the layer output formula of Neural Nets (output = i1 * w1 + i2 * w2 + ... + in * wn)
         """
-        self.hidden_input = np.dot(self.x, self.hidden_weights)
+        self.hidden_input = np.dot(self.x, self.hidden_weights) + self.bias
         self.hidden_output = sigmoid(self.hidden_input, derivative=False)
     
     def init_output_pipe(self):
@@ -68,34 +67,54 @@ class FeedforwardNeuralNet:
         self.output_input = np.dot(self.hidden_output, self.y_weights)
         self.output_output = sigmoid(self.output_input, derivative=False)
     
-    def update_weights(self, derivative_error_hidden, derivative_error_output):
+    def update_weights(self, derivative_error_hidden, derivative_error_output, lr):
         """
         Increase/Decrease weigths for layers according to the resulting errors from the gradient descent algo
         """
-        self.hidden_weights -= self.learning_rate * derivative_error_hidden
-        self.y_weights -= self.learning_rate * derivative_error_output
+        self.hidden_weights -= lr * derivative_error_hidden
+        self.y_weights -= lr * derivative_error_output
     
-    def descent(self, epochs):
+    def train(self, epochs, learning_rate):
         """
+        In Deep Learning (and most of ML), training means finding the minimum of the error (cost) function
         Updates the weight values of the neural net using gradient descent
         """
         for epoch in range(epochs):
 
-            # These will be updated after calculating the phase 1 and 2 derivatives
-            derivative_error_hidden = 0
-            derivative_error_output = 0
-
+            # Propagate from input layer to hidden layer and then to output layer & update output layer weights
             self.init_hidden_pipe()
             self.init_output_pipe()
+            mean_squared_err = MSE(self.output_output, self.y, vector_size=self.output_size) # display MSE
+            print(mean_squared_err.sum())
 
-            # Phase 1 -> update output layer weights
-            MSE(self.output_output, self.y) # display MSE
+            # (d = curl operator)
+            # Phase 1 Derivatives (process output layer gradients) -- assets/img/ChainRulePhase1.png for visualisation
+            derror_douto = self.output_output - self.y # on output layer
+            douto_dino = sigmoid(self.output_input, derivative=True)
+            dino_dwo = self.hidden_output
+            # derror_dwo is the left side of the chain rule 
+            derror_dwo = np.dot(dino_dwo.T, derror_douto * douto_dino)
 
-            # Phase 1 Derivatives TODO
-            # Phase 2 -> update hidden layer weights TODO
+            # Phase 2 Derivatives (process hidden layer gradients) -- assets/img/ChainRulePhase2.png for visualisation
+            derror_dino = derror_douto * douto_dino # on output layer
+            dino_douth = self.y_weights
+            derror_douth = np.dot(derror_dino, dino_douth.T)
+            douth_dinh = sigmoid(self.hidden_input, derivative=True)
+            dinh_dwh = self.x
+            # derror_wh is the left side of the chain rule 
+            derror_dwh = np.dot(dinh_dwh.T, douth_dinh * derror_douth)
 
             # Update weights
-            self.update_weights(derivative_error_hidden, derivative_error_output)
+            self.update_weights(derror_dwh, derror_dwo, learning_rate)
+    
+    def predict(self, input):
+        # Forward to Hidden Layer
+        hidden_input = np.dot(input, self.hidden_weights)
+        hidden_output = sigmoid(hidden_input, derivative=False)
+        # Forward to Output Layer
+        output_input = np.dot(hidden_output, self.y_weights)
+        output_output = sigmoid(output_input, derivative=False)
+        print(output_output) # final prediction on input
 
     # Debugging
     def display_network(self):

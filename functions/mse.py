@@ -1,10 +1,9 @@
 import numpy as np
 
-def MSE(predicted, real):
+def MSE(predicted, real, vector_size):
     """
-    Mean Squared Error function
+    Mean Squared Error function that returns the vector of errors for each pair (predicted_i, real_i)
     """
-    output_error = ((1 / 2) * (np.power((predicted - real), 2)))
-    mse = output_error.sum()
-    print(mse)
-    # return mse
+    mse = ((1 / vector_size) * (np.power((predicted - real), 2)))
+    # print(mse)
+    return mse 
