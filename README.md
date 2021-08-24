@@ -3,9 +3,13 @@ An abstract implementation of a Multilayered Perceptron (Multilayered Feedforwar
 
 # Progress
 [x] Neural Net Config (~~1 hidden layer~~, n hidden layers)
+
 [x] Feedforward (~~sigmoid~~, ~~linear~~, ReLU (?))
+
 [x] Training (~~GD~~, ~~Backpropagation~~, add check on MSE to stop further iterations when MSE goes down)
+
 [x] Predicting
+
 [ ] Stochastic Gradient Descent, Minibatch Gradient Descent 
 
 # Example Models & API Usage (./models/...)
