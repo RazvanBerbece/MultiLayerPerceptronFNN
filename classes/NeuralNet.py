@@ -18,12 +18,15 @@
 
     References :
         1. https://pub.towardsai.net/building-neural-networks-with-python-code-and-math-in-detail-ii-bbe8accbf3d1#8c76
+        2. https://www.kdnuggets.com/2019/11/build-artificial-neural-network-scratch-part-1.html
+        3. https://brilliant.org/wiki/backpropagation/
 """
 
 # Imports
 import numpy as np
 from functions.sigmoid import sigmoid
 from functions.mse import MSE
+from functions.linear import linear
 
 class FeedforwardNeuralNet:
 
@@ -65,7 +68,7 @@ class FeedforwardNeuralNet:
         self.output_output = the output of the output layer
         """
         self.output_input = np.dot(self.hidden_output, self.y_weights)
-        self.output_output = sigmoid(self.output_input, derivative=False)
+        self.output_output = linear(self.output_input, derivative=False)
     
     def update_weights(self, derivative_error_hidden, derivative_error_output, lr):
         """
@@ -81,16 +84,18 @@ class FeedforwardNeuralNet:
         """
         for epoch in range(epochs):
 
+            print("EPOCH ", epoch + 1) # epoch + 1 in order print epochs indexed from 1
+
             # Propagate from input layer to hidden layer and then to output layer & update output layer weights
             self.init_hidden_pipe()
             self.init_output_pipe()
             mean_squared_err = MSE(self.output_output, self.y, vector_size=self.output_size) # display MSE
-            print(mean_squared_err.sum())
+            print("MSE : ", mean_squared_err.sum())
 
-            # (d = curl operator)
+            # GRADIENT DESCENT (d = curl operator)
             # Phase 1 Derivatives (process output layer gradients) -- assets/img/ChainRulePhase1.png for visualisation
             derror_douto = self.output_output - self.y # on output layer
-            douto_dino = sigmoid(self.output_input, derivative=True)
+            douto_dino = linear(self.output_input, derivative=True)
             dino_dwo = self.hidden_output
             # derror_dwo is the left side of the chain rule 
             derror_dwo = np.dot(dino_dwo.T, derror_douto * douto_dino)
@@ -113,7 +118,7 @@ class FeedforwardNeuralNet:
         hidden_output = sigmoid(hidden_input, derivative=False)
         # Forward to Output Layer
         output_input = np.dot(hidden_output, self.y_weights)
-        output_output = sigmoid(output_input, derivative=False)
+        output_output = linear(output_input, derivative=False)
         print(output_output) # final prediction on input
 
     # Debugging

@@ -1,3 +1,8 @@
+"""
+    (RUNNABLE) 
+    Modelling the OR logic gate using a perceptron FNN
+"""
+
 # Imports #
 import numpy as np
 from classes.NeuralNet import FeedforwardNeuralNet
@@ -17,8 +22,8 @@ FNN = FeedforwardNeuralNet(
 
 # Init Neural Net #
 # Random data to be used in training
-input_features = np.array([[1,0],[1,1],[0,1],[0,0],[1,0]])
-output_target = np.array([[1,1,1,0,1]])
+input_features = np.array([[0,0],[1,0],[1,1]])
+output_target = np.array([[0,1,1]])
 # Method calls for init
 # Data
 FNN.init_input(input_array=input_features)
@@ -28,11 +33,11 @@ FNN.init_weights()
 
 # Training #
 LR = 0.05
-EPOCHS = 20000
+EPOCHS = 50000
 FNN.train(epochs=EPOCHS, learning_rate=LR)
 
 # Predicting #
-FNN.predict(np.array([[1,1]]))
+FNN.predict(np.array([[6,4]]))
 
 # Debugging #
 # FNN.display_network()

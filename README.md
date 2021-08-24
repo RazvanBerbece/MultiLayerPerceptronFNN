@@ -1,2 +1,13 @@
-# NeuralNetOR
-OR logic gate prediction model using a Feedforward Neural Network. Built as a third-party API which provides a wrapper around the implementation from modelling to predicting. Built in Python.
+# FeedforwardNeuralNet
+An abstract implementation of a Multilayered Perceptron (Multilayered Feedforward Neural Network). Provides a well-documented API which exposes a wrapper around the whole process (all the way from network config, to modelling, to training and predicting). Built in Python.
+
+# Progress
+[x] Neural Net Config (~~1 hidden layer~~, n hidden layers)
+[x] Feedforward (~~sigmoid~~, ~~linear~~, ReLU (?))
+[x] Training (~~GD~~, ~~Backpropagation~~)
+[x] Predicting
+[ ] Stochastic Gradient Descent, Minibatch Gradient Descent 
+
+# Example Models & API Usage (./models/...)
+1. OR Gate (or.py) - a model that predicts the result of two binary inputs that go through an OR gate
+2. Sum (sum.py) - a model that predicts the result of the sum between two numbers
