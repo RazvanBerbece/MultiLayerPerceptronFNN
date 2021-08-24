@@ -1,22 +1,26 @@
 """
-    Models can be run here as this root file has access to the classes/ module
+    (RUNNABLE) 
+    Modelling 2-integer summation using a perceptron FNN
 """
 
 # Imports #
 import numpy as np
 from classes.NeuralNet import FeedforwardNeuralNet
+from functions.activation.linear import linear
 
 # Hyperparameters #
 INPUT_NODES = 2
 HIDDEN_NODES = 4
 OUTPUT_NODES = 1
 BIAS = 0.25 # global bias
+OUTPUT_ACTIVATION_FUNCTION = linear # use linear as we don't have to squish the output between 0 and 1 in the case of regression
 
 # Allocate and config Neural Net with hyperparams #
 FNN = FeedforwardNeuralNet(
     input_size=INPUT_NODES, 
     hidden_size=HIDDEN_NODES, 
-    output_size=OUTPUT_NODES, 
+    output_size=OUTPUT_NODES,
+    output_activation=OUTPUT_ACTIVATION_FUNCTION, 
     bias=BIAS)
 
 # Init Neural Net #
@@ -36,7 +40,7 @@ EPOCHS = 500000
 FNN.train(epochs=EPOCHS, learning_rate=LR)
 
 # Predicting #
-FNN.predict(np.array([[3,4]]))
+FNN.predict(np.array([[4,2]]))
 
 # Debugging #
 # FNN.display_network()

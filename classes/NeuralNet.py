@@ -24,17 +24,18 @@
 
 # Imports
 import numpy as np
-from functions.sigmoid import sigmoid
-from functions.mse import MSE
-from functions.linear import linear
+from functions.cost.mse import MSE
+from functions.activation.sigmoid import sigmoid
 
 class FeedforwardNeuralNet:
 
     # Network Hyperparameters Initialiser 
-    def __init__(self, input_size, hidden_size, output_size, bias):
+    def __init__(self, input_size, hidden_size, output_size, output_activation, bias):
         self.input_size  = input_size  # nodes in the input layer
         self.hidden_size = hidden_size  # nodes in the hidden layer
         self.output_size = output_size  # nodes in the output layer
+
+        self.output_activation = output_activation # the activation function for the output of the output layer
 
         self.bias = bias
     
@@ -68,7 +69,7 @@ class FeedforwardNeuralNet:
         self.output_output = the output of the output layer
         """
         self.output_input = np.dot(self.hidden_output, self.y_weights)
-        self.output_output = linear(self.output_input, derivative=False)
+        self.output_output = self.output_activation(self.output_input, derivative=False)
     
     def update_weights(self, derivative_error_hidden, derivative_error_output, lr):
         """
@@ -95,9 +96,9 @@ class FeedforwardNeuralNet:
             # GRADIENT DESCENT (d = curl operator)
             # Phase 1 Derivatives (process output layer gradients) -- assets/img/ChainRulePhase1.png for visualisation
             derror_douto = self.output_output - self.y # on output layer
-            douto_dino = linear(self.output_input, derivative=True)
+            douto_dino = self.output_activation(self.output_input, derivative=True)
             dino_dwo = self.hidden_output
-            # derror_dwo is the left side of the chain rule 
+            # derror_dwo is the left side of the chain rule 1
             derror_dwo = np.dot(dino_dwo.T, derror_douto * douto_dino)
 
             # Phase 2 Derivatives (process hidden layer gradients) -- assets/img/ChainRulePhase2.png for visualisation
@@ -106,7 +107,7 @@ class FeedforwardNeuralNet:
             derror_douth = np.dot(derror_dino, dino_douth.T)
             douth_dinh = sigmoid(self.hidden_input, derivative=True)
             dinh_dwh = self.x
-            # derror_wh is the left side of the chain rule 
+            # derror_dwh is the left side of the chain rule 2
             derror_dwh = np.dot(dinh_dwh.T, douth_dinh * derror_douth)
 
             # Update weights
@@ -118,7 +119,7 @@ class FeedforwardNeuralNet:
         hidden_output = sigmoid(hidden_input, derivative=False)
         # Forward to Output Layer
         output_input = np.dot(hidden_output, self.y_weights)
-        output_output = linear(output_input, derivative=False)
+        output_output = self.output_activation(output_input, derivative=False)
         print(output_output) # final prediction on input
 
     # Debugging
