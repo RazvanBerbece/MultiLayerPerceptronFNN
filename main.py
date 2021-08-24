@@ -1,6 +1,5 @@
 """
-    (RUNNABLE) 
-    Modelling 2-integer summation using a perceptron FNN
+    Models can be run here as this root file has access to the classes/ module
 """
 
 # Imports #
@@ -37,7 +36,7 @@ EPOCHS = 500000
 FNN.train(epochs=EPOCHS, learning_rate=LR)
 
 # Predicting #
-FNN.predict(np.array([[6,4]]))
+FNN.predict(np.array([[3,4]]))
 
 # Debugging #
 # FNN.display_network()
