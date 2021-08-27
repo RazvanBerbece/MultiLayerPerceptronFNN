@@ -17,6 +17,7 @@
             To check: y (number of rows) = x (number of rows) as each entry has a target
 
     References :
+        0. https://stackabuse.com/gradient-descent-in-python-implementation-and-theory/ <- nice one
         1. https://pub.towardsai.net/building-neural-networks-with-python-code-and-math-in-detail-ii-bbe8accbf3d1#8c76
         2. https://www.kdnuggets.com/2019/11/build-artificial-neural-network-scratch-part-1.html
         3. https://brilliant.org/wiki/backpropagation/
